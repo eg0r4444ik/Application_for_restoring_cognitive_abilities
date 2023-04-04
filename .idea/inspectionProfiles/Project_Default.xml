@@ -4,6 +4,7 @@
     <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredErrors">
         <list>
+<<<<<<< HEAD
           <option value="E302" />
         </list>
       </option>
@@ -14,6 +15,18 @@
           <option value="main.Crypto" />
           <option value="main.number_of_comparisons" />
           <option value="PyQt5.uic" />
+=======
+          <option value="E703" />
+          <option value="E501" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N803" />
+          <option value="N806" />
+>>>>>>> d14d5dd94d3361897d84490cf19bca87e8e76e2f
         </list>
       </option>
     </inspection_tool>
