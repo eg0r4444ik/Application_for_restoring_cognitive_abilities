@@ -1,8 +1,8 @@
 import numpy as np
-from skimage import io
 from skimage.color import rgb2lab, deltaE_cie76
 
 
+# test
 class ImageProcessor:
     def __init__(self):
         pass
