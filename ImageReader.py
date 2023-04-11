@@ -1,3 +1,5 @@
+import time
+
 import cv2
 
 from threading import Thread
@@ -19,8 +21,12 @@ class ImageReader(Thread):
         self.running = False
 
     def run(self):
+        t = time.time()
         while self.running:
             _, img = self.video.read()
-            self.cb(img)
+            if time.time() - t > 10:
+                self.cb(img)
+                print("Совершите действие")
+                t = time.time()
         self.video.release()
         cv2.destroyAllWindows()

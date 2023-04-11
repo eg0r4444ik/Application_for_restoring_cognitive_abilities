@@ -59,7 +59,6 @@ class ImageProcessor:
         # print(pixels_counter[1])
         # print(pixels_counter[2])
         self.analyzer.analyze(pixels_counter[0], pixels_counter[1])
-        time.sleep(10)
         img[dE_red1 < threshold1] = black_3d
         img[dE_red2 < threshold2] = black_3d
 

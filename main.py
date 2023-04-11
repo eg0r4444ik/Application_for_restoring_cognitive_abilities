@@ -24,23 +24,30 @@ def f(r, g, b):
 while True:
     # Чтение кадра
     ret, frame = cap.read()
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask_red = cv2.inRange(hsv, lower_red, upper_red) + cv2.inRange(hsv, lower_red2, upper_red2)
-    result = cv2.bitwise_and(frame, frame, mask=mask_red)
-    # for i in range(0, len(frame), 5):
-    #     for j in range(0, len(frame[i]), 5):
-    #         cell = frame[i][j]
-    #         if f(cell[2], cell[1], cell[0]):
-    #             cell[0] = 255
-    #             cell[1] = 1
-    #             cell[2] = 1
-    # cv2.imshow('frame', frame)
-    cv2.imshow('image', result)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # конвертация в формат HSV
+    hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    # Отображение кадра с контурами
-    # cv2.imshow('frame', frame)
+    # создание маски для синих пикселей
+    lower_blue = (100, 150, 150)
+    upper_blue = (140, 255, 255)
+    mask3 = cv2.inRange(hsv_img, lower_blue, upper_blue)
+
+    lower_red = np.array([0, 150, 150])
+    upper_red = np.array([10, 255, 255])
+    mask1 = cv2.inRange(hsv_img, lower_red, upper_red)
+
+    lower_red = np.array([170, 150, 150])
+    upper_red = np.array([180, 255, 255])
+    mask2 = cv2.inRange(hsv_img, lower_red, upper_red)
+
+    # Объединение масок
+    mask = mask1 + mask2 + mask3
+
+    # применение маски к изображению
+    result = cv2.bitwise_and(frame, frame, mask=mask)
+
+    # отображение изображения
+    cv2.imshow('Result', result)
 
     # Выход из цикла при нажатии клавиши 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
