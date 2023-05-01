@@ -34,7 +34,7 @@ class App(QWidget):
         self.image_label.setPixmap(grey)
 
         self.processor = ImageProcessor()
-        self.reader = ImageReader(self.process_img, 1)
+        self.reader = ImageReader(self.process_img, 0)
         self.reader.start()
 
     def process_img(self, img):

@@ -29,7 +29,6 @@ class AreaAnalyzer:
             self.engine.say("Ничего не изменилось")
         self.engine.runAndWait()
 
-
     def detS(self, img):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return cv2.countNonZero(gray)
