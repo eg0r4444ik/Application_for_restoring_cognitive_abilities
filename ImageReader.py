@@ -25,7 +25,7 @@ class ImageReader(Thread):
         self.running = False
 
     def run(self):
-        t = time.time();
+        t = time.time()
         while self.running:
             _, img = self.video.read()
             hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -52,6 +52,18 @@ class ImageReader(Thread):
 
             blue = cv2.bitwise_and(img, img, mask=mask3)
             red = cv2.bitwise_and(img, img, mask=(mask1+mask2))
+
+            detector = cv2.QRCodeDetector()
+            data, bbox, straight_qrcode = detector.detectAndDecode(img)
+
+            if bbox is not None:
+                print(data)
+                n_lines = len(bbox[0])
+                bbox1 = bbox.astype(int)
+                for i in range(n_lines):
+                    point1 = tuple(bbox1[0, [i][0]])
+                    point2 = tuple(bbox1[0, [(i + 1) % n_lines][0]])
+                    cv2.line(result, point1, point2, color=(255, 0, 0), thickness=2)
 
             self.cb(result)
             if time.time() - t > 10:
