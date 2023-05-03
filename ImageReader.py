@@ -54,14 +54,14 @@ class ImageReader(Thread):
             blue = cv2.bitwise_and(img, img, mask=mask3)
             red = cv2.bitwise_and(img, img, mask=(mask1+mask2))
 
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             dict_aruco = aruco.Dictionary_get(aruco.DICT_4X4_50)
             parameters = aruco.DetectorParameters_create()
-            # Обнаружение маркеров на изображении
-            markerCorners, markerIds, rejectedCandidates = aruco.detectMarkers(img, dict_aruco,
-                                                                                  parameters=parameters)
-            print(markerIds)
 
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, dict_aruco, parameters=parameters)
+
+            result = aruco.drawDetectedMarkers(img.copy(), corners, ids)
+
             qr_codes = decode(gray)
             for qr in qr_codes:
                 (x, y, w, h) = qr.rect
