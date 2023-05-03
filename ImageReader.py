@@ -1,9 +1,10 @@
 import time
 
 import cv2
+from cv2 import aruco
 import numpy as np
-
 from threading import Thread
+from pyzbar.pyzbar import decode
 
 from AreaAnalyzer import AreaAnalyzer
 
@@ -48,22 +49,26 @@ class ImageReader(Thread):
             mask = mask1 + mask2 + mask3
 
             # применение маски к изображению
-            result = cv2.bitwise_and(img, img, mask=mask)
+            result = cv2.bitwise_and(img, img, mask=None)
 
             blue = cv2.bitwise_and(img, img, mask=mask3)
             red = cv2.bitwise_and(img, img, mask=(mask1+mask2))
 
-            detector = cv2.QRCodeDetector()
-            data, bbox, straight_qrcode = detector.detectAndDecode(img)
+            dict_aruco = aruco.Dictionary_get(aruco.DICT_4X4_50)
+            parameters = aruco.DetectorParameters_create()
+            # Обнаружение маркеров на изображении
+            markerCorners, markerIds, rejectedCandidates = aruco.detectMarkers(img, dict_aruco,
+                                                                                  parameters=parameters)
+            print(markerIds)
 
-            if bbox is not None:
-                print(data)
-                n_lines = len(bbox[0])
-                bbox1 = bbox.astype(int)
-                for i in range(n_lines):
-                    point1 = tuple(bbox1[0, [i][0]])
-                    point2 = tuple(bbox1[0, [(i + 1) % n_lines][0]])
-                    cv2.line(result, point1, point2, color=(255, 0, 0), thickness=2)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            qr_codes = decode(gray)
+            for qr in qr_codes:
+                (x, y, w, h) = qr.rect
+                cv2.rectangle(result, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                print(qr.data.decode("utf-8"))
+
+
 
             self.cb(result)
             if time.time() - t > 10:
