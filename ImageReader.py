@@ -4,9 +4,9 @@ import cv2
 from cv2 import aruco
 import numpy as np
 from threading import Thread
-from pyzbar.pyzbar import decode
 
 from AreaAnalyzer import AreaAnalyzer
+from ArucoCoordsDetector import ArucoCoordsDetector
 
 
 class ImageReader(Thread):
@@ -16,6 +16,7 @@ class ImageReader(Thread):
         self.video = cv2.VideoCapture(source_idx)
         self.video.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         self.analyzer = AreaAnalyzer()
+        self.detector = ArucoCoordsDetector()
         self.running = False
 
     def start(self):
@@ -52,21 +53,23 @@ class ImageReader(Thread):
             result = cv2.bitwise_and(img, img, mask=None)
 
             blue = cv2.bitwise_and(img, img, mask=mask3)
-            red = cv2.bitwise_and(img, img, mask=(mask1+mask2))
+            red = cv2.bitwise_and(img, img, mask=(mask1 + mask2))
 
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            dict_aruco = aruco.Dictionary_get(aruco.DICT_4X4_50)
+            dict_aruco = aruco.Dictionary_get(aruco.DICT_5X5_50)
             parameters = aruco.DetectorParameters_create()
 
             corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, dict_aruco, parameters=parameters)
 
             result = aruco.drawDetectedMarkers(img.copy(), corners, ids)
 
-            qr_codes = decode(gray)
-            for qr in qr_codes:
-                (x, y, w, h) = qr.rect
-                cv2.rectangle(result, (x, y), (x + w, y + h), (0, 0, 255), 2)
-                print(qr.data.decode("utf-8"))
+            markers_id = [49]#Номера маркеров, которые хотим найти
+
+            for marker_id in markers_id:
+                if marker_id in np.ravel(ids):
+                    index = np.where(ids == marker_id)[0][0]
+                    print(str(self.detector.center_coords(index, corners)) + " " + str(marker_id) )#Печатаем координаты центра маркеров и их id
+
 
 
 
