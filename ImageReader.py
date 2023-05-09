@@ -5,6 +5,7 @@ from cv2 import aruco
 import numpy as np
 from threading import Thread
 
+from CommandDetector import CommandDetector
 from ColorDetector import ColorDetector
 
 
@@ -15,6 +16,8 @@ class ImageReader(Thread):
         self.video = cv2.VideoCapture(source_idx)
         self.video.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         self.detector = ColorDetector()
+        self.com_det = CommandDetector()
+        self.com_det.generate_command()
         self.running = False
 
     def start(self):
@@ -31,7 +34,7 @@ class ImageReader(Thread):
             hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            dict_aruco = aruco.Dictionary_get(aruco.DICT_5X5_50)
+            dict_aruco = aruco.Dictionary_get(aruco.DICT_4X4_50)
             parameters = aruco.DetectorParameters_create()
 
             corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, dict_aruco, parameters=parameters)
@@ -40,12 +43,16 @@ class ImageReader(Thread):
 
             markers_id = [16]
 
-            for marker_id in markers_id:
-                if marker_id in np.ravel(ids):
-                    index = np.where(ids == marker_id)[0][0]
-                    print(self.detector.define_zone(ids, corners, index))
-
             self.cb(result)
+            if time.time() - t > 5:
+                bol = False
+                for marker_id in markers_id:
+                    if marker_id in np.ravel(ids):
+                        index = np.where(ids == marker_id)[0][0]
+                        bol = self.com_det.check_command(self.detector.define_zone(ids, corners, index))
+                if bol:
+                    self.com_det.generate_command()
+                t = time.time()
 
         self.video.release()
         cv2.destroyAllWindows()

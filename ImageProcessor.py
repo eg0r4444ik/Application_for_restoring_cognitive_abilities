@@ -3,13 +3,13 @@ import time
 import numpy as np
 from skimage.color import rgb2lab, deltaE_cie76
 
-from AreaAnalyzer import AreaAnalyzer
+from CommandDetector import CommandDetector
 
 
 # final test
 class ImageProcessor:
     def __init__(self):
-        self.analyzer = AreaAnalyzer()
+        self.analyzer = CommandDetector()
 
     def matches_red(self, pix):
         return (pix[0] - pix[1]) > 80 and (pix[0] - pix[2]) > 80
