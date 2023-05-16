@@ -1,4 +1,5 @@
 import time
+import random
 
 import cv2
 from cv2 import aruco
@@ -15,9 +16,8 @@ class ImageReader(Thread):
         self.cb = cb
         self.video = cv2.VideoCapture(source_idx)
         self.video.set(cv2.CAP_PROP_BUFFERSIZE, 2)
-        self.detector = ColorDetector()
         self.com_det = CommandDetector()
-        self.com_det.generate_command()
+        self.curr_command = -1
         self.running = False
 
     def start(self):
@@ -41,17 +41,37 @@ class ImageReader(Thread):
 
             result = aruco.drawDetectedMarkers(img.copy(), corners, ids)
 
-            markers_id = [16]
+            self.com_det.update(ids, corners)
 
             self.cb(result)
             if time.time() - t > 5:
-                bol = False
-                for marker_id in markers_id:
-                    if marker_id in np.ravel(ids):
-                        index = np.where(ids == marker_id)[0][0]
-                        bol = self.com_det.check_command(self.detector.define_zone(ids, corners, index))
-                if bol:
-                    self.com_det.generate_command()
+                if self.curr_command == 0:
+                    bol = self.com_det.check_command()
+                    if bol:
+                        self.curr_command = random.randint(0, 1)
+                        if self.curr_command == 0:
+                            self.com_det.generate_command()
+                        else:
+                            self.com_det.replace()
+                    else:
+                        self.com_det.repeat_command()
+                elif self.curr_command == 1:
+                    bol = self.com_det.check_replace()
+                    if bol:
+                        self.curr_command = random.randint(0, 1)
+                        if self.curr_command == 0:
+                            self.com_det.generate_command()
+                        else:
+                            self.com_det.replace()
+                    else:
+                        self.com_det.repeat_replace()
+                else:
+                    self.curr_command = random.randint(0, 1)
+                    if self.curr_command == 0:
+                        self.com_det.generate_command()
+                    else:
+                        self.com_det.replace()
+
                 t = time.time()
 
         self.video.release()
