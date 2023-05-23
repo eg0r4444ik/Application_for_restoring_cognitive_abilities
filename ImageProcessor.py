@@ -7,18 +7,18 @@ from CommandDetector import CommandDetector
 
 
 # final test
-class ImageProcessor:
-    def __init__(self):
-        self.analyzer = CommandDetector()
+# class ImageProcessor:
+#     def __init__(self):
+        # self.analyzer = CommandDetector()
 
-    def matches_red(self, pix):
-        return (pix[0] - pix[1]) > 80 and (pix[0] - pix[2]) > 80
+    # def matches_red(self, pix):
+    #     return (pix[0] - pix[1]) > 80 and (pix[0] - pix[2]) > 80
+    #
+    # def process(self, img):
+    #     pixels_counter = [0, 0, 0]
+    #
+    #     lab = rgb2lab(img)
 
-    def process(self, img):
-        pixels_counter = [0, 0, 0]
-
-        # lab = rgb2lab(img)
-        #
         # red1 = [255, 70, 70]
         # red2 = [100, 20, 20]
         # threshold1 = 40

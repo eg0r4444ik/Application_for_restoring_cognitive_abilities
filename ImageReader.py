@@ -11,12 +11,12 @@ from ColorDetector import ColorDetector
 
 
 class ImageReader(Thread):
-    def __init__(self, cb, source_idx):
+    def __init__(self, frame, cb, source_idx):
         Thread.__init__(self)
         self.cb = cb
         self.video = cv2.VideoCapture(source_idx)
         self.video.set(cv2.CAP_PROP_BUFFERSIZE, 2)
-        self.com_det = CommandDetector()
+        self.com_det = CommandDetector(frame)
         self.curr_command = -1
         self.running = False
 
