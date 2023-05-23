@@ -13,7 +13,7 @@ size_mark = 500  # Size of markers
 
 ### --- marker images are generated and saved --- ###
 # Call marker type
-dict_aruco = aruco.Dictionary_get(aruco.DICT_5X5_50)
+dict_aruco = aruco.Dictionary_get(aruco.DICT_4X4_50)
 
 for count in range(num_mark):
 
