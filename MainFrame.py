@@ -19,12 +19,7 @@ class App(QWidget):
         self.setWindowTitle("Main Window")
         self.width = 640
         self.height = 700
-        self.audio1 = None
-        self.audio2 = None
-        self.audio3 = None
-        self.audio4 = None
-        self.audio5 = None
-        self.audio6 = None
+        self.audio = []
         self.setFixedSize(self.width, self.height)
         # create the label that holds the image
         self.image_label = QLabel(self)
@@ -32,7 +27,8 @@ class App(QWidget):
 
         # create a vertical box layout and add the two labels
         vbox = QVBoxLayout()
-        font = QtGui.QFont("Roboto", 10)
+        font1 = QtGui.QFont("Roboto", 10)
+        font2 = QtGui.QFont("Roboto", 16)
         self.edit1 = QLineEdit()
         self.edit2 = QLineEdit()
         self.edit3 = QLineEdit()
@@ -42,38 +38,24 @@ class App(QWidget):
         self.edit3.setFixedWidth(250)
         self.edit4.setFixedWidth(250)
         self.start_btn = QPushButton('Старт', self)
-        self.start_btn.setFont(font)
+        self.start_btn.setFont(font2)
         self.start_btn.clicked.connect(self.startClicked)
-        self.load_button1 = QPushButton('Загрузить аудио-файл', self)
-        self.load_button2 = QPushButton('Загрузить аудио-файл', self)
-        self.load_button3 = QPushButton('Загрузить аудио-файл', self)
-        self.load_button4 = QPushButton('Загрузить аудио-файл', self)
-        self.load_button5 = QPushButton('Загрузить файл с похвалой', self)
-        self.load_button6 = QPushButton('Загрузить файл "Повтори"', self)
-        self.load_button1.setGeometry(290, 470, 150, 40)
-        self.load_button2.setGeometry(290, 530, 150, 40)
-        self.load_button3.setGeometry(290, 590, 150, 40)
-        self.load_button4.setGeometry(290, 650, 150, 40)
-        self.load_button5.setGeometry(450, 530, 170, 40)
-        self.load_button6.setGeometry(450, 590, 170, 40)
+        self.load_button1 = QPushButton('Загрузить аудио-файлы', self)
+        self.load_button1.setGeometry(290, 530, 325, 100)
+        self.load_button1.setFont(font2)
         self.load_button1.clicked.connect(self.load_file1)
-        self.load_button2.clicked.connect(self.load_file2)
-        self.load_button3.clicked.connect(self.load_file3)
-        self.load_button4.clicked.connect(self.load_file4)
-        self.load_button5.clicked.connect(self.load_file5)
-        self.load_button6.clicked.connect(self.load_file6)
         label1 = QLabel('Название первого предмета:')
         label2 = QLabel('Название второго предмета:')
         label3 = QLabel('Название третьего предмета:')
         label4 = QLabel('Название четвертого предмета:')
-        label1.setFont(font)
-        label2.setFont(font)
-        label3.setFont(font)
-        label4.setFont(font)
-        self.edit1.setFont(font)
-        self.edit2.setFont(font)
-        self.edit3.setFont(font)
-        self.edit4.setFont(font)
+        label1.setFont(font1)
+        label2.setFont(font1)
+        label3.setFont(font1)
+        label4.setFont(font1)
+        self.edit1.setFont(font1)
+        self.edit2.setFont(font1)
+        self.edit3.setFont(font1)
+        self.edit4.setFont(font1)
         vbox.addWidget(self.start_btn)
         vbox.addWidget(self.image_label)
         vbox.addWidget(label1)
@@ -103,55 +85,10 @@ class App(QWidget):
         if self.filename:
             wave_obj = sa.WaveObject.from_wave_file(self.filename)
 
-        self.audio1 = wave_obj
-
-    def load_file2(self):
-        self.filename, _ = QFileDialog.getOpenFileName(self, 'Выберите файл', '', '(*.wav)')
-        wave_obj = None
-
-        if self.filename:
-            wave_obj = sa.WaveObject.from_wave_file(self.filename)
-
-        self.audio2 = wave_obj
-
-    def load_file3(self):
-        self.filename, _ = QFileDialog.getOpenFileName(self, 'Выберите файл', '', '(*.wav)')
-        wave_obj = None
-
-        if self.filename:
-            wave_obj = sa.WaveObject.from_wave_file(self.filename)
-
-        self.audio3 = wave_obj
-
-    def load_file4(self):
-        self.filename, _ = QFileDialog.getOpenFileName(self, 'Выберите файл', '', '(*.wav)')
-        wave_obj = None
-
-        if self.filename:
-            wave_obj = sa.WaveObject.from_wave_file(self.filename)
-
-        self.audio4 = wave_obj
-
-    def load_file5(self):
-        self.filename, _ = QFileDialog.getOpenFileName(self, 'Выберите файл', '', '(*.wav)')
-        wave_obj = None
-
-        if self.filename:
-            wave_obj = sa.WaveObject.from_wave_file(self.filename)
-
-        self.audio5 = wave_obj
-
-    def load_file6(self):
-        self.filename, _ = QFileDialog.getOpenFileName(self, 'Выберите файл', '', '(*.wav)')
-        wave_obj = None
-
-        if self.filename:
-            wave_obj = sa.WaveObject.from_wave_file(self.filename)
-
-        self.audio6 = wave_obj
+        self.audio.append(wave_obj)
 
     def startClicked(self):
-        self.reader = ImageReader(self, self.process_img, 0)
+        self.reader = ImageReader(self, self.process_img, 1)
         self.reader.start()
 
     def process_img(self, img):
