@@ -79,13 +79,15 @@ class App(QWidget):
         # self.reader = ImageReader(self, self.process_img, 0)
 
     def load_file1(self):
-        self.filename, _ = QFileDialog.getOpenFileName(self, 'Выберите файл', '', '(*.wav)')
-        wave_obj = None
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.ExistingFiles)
+        file_dialog.setOption(QFileDialog.DontUseNativeDialog, True)
+        self.filenames, _ = file_dialog.getOpenFileNames(self, 'Выберите файлы', '', '(*.wav)')
 
-        if self.filename:
-            wave_obj = sa.WaveObject.from_wave_file(self.filename)
-
-        self.audio.append(wave_obj)
+        if self.filenames:
+            for filename in self.filenames:
+                wave_obj = sa.WaveObject.from_wave_file(filename)
+                self.audio.append(wave_obj)
 
     def startClicked(self):
         self.reader = ImageReader(self, self.process_img, 1)
