@@ -18,7 +18,7 @@ class App(QWidget):
         super().__init__()
         self.setWindowTitle("Main Window")
         self.width = 640
-        self.height = 700
+        self.height = 900
         self.audio = []
         self.setFixedSize(self.width, self.height)
         # create the label that holds the image
@@ -33,17 +33,26 @@ class App(QWidget):
         self.edit2 = QLineEdit()
         self.edit3 = QLineEdit()
         self.edit4 = QLineEdit()
+        self.output_filename = None
         self.edit1.setFixedWidth(250)
         self.edit2.setFixedWidth(250)
         self.edit3.setFixedWidth(250)
         self.edit4.setFixedWidth(250)
         self.start_btn = QPushButton('Старт', self)
         self.start_btn.setFont(font2)
-        self.start_btn.clicked.connect(self.startClicked)
+        self.start_btn.clicked.connect(self.start_clicked)
         self.load_button1 = QPushButton('Загрузить аудио-файлы', self)
-        self.load_button1.setGeometry(290, 530, 325, 100)
+        self.output_file_btn = QPushButton('Укажите файл для \n результатов', self)
+        self.end_btn = QPushButton('Закончить работу и \n показать результаты', self)
+        self.end_btn.setGeometry(290, 620, 325, 80)
+        self.load_button1.setGeometry(290, 710, 325, 80)
+        self.output_file_btn.setGeometry(290, 800, 325, 80)
+        self.end_btn.setFont(font2)
         self.load_button1.setFont(font2)
+        self.output_file_btn.setFont(font2)
+        self.end_btn.clicked.connect(self.end_pr)
         self.load_button1.clicked.connect(self.load_file1)
+        self.output_file_btn.clicked.connect(self.output_file)
         label1 = QLabel('Название первого предмета:')
         label2 = QLabel('Название второго предмета:')
         label3 = QLabel('Название третьего предмета:')
@@ -69,7 +78,7 @@ class App(QWidget):
         # set the vbox layout as the widgets layout
         self.setLayout(vbox)
         # create a grey pixmap
-        grey = QPixmap(self.width, self.height)
+        grey = QPixmap(640, 520)
         grey.fill(QColor('darkGray'))
         # set the image image to the grey pixmap
         self.image_label.setPixmap(grey)
@@ -89,7 +98,19 @@ class App(QWidget):
                 wave_obj = sa.WaveObject.from_wave_file(filename)
                 self.audio.append(wave_obj)
 
-    def startClicked(self):
+    def output_file(self):
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.ExistingFiles)
+        file_dialog.setOption(QFileDialog.DontUseNativeDialog, True)
+        self.filename, _ = file_dialog.getOpenFileName(self, 'Выберите файл', '', '(*.txt)')
+
+        if self.filename:
+            self.output_filename = self.filename
+
+    def end_pr(self):
+        self.reader.stop()
+
+    def start_clicked(self):
         self.reader = ImageReader(self, self.process_img, 1)
         self.reader.start()
 

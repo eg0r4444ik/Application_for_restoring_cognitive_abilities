@@ -44,7 +44,7 @@ class ImageReader(Thread):
             self.com_det.update(ids, corners)
 
             self.cb(result)
-            if time.time() - t > 5:
+            if time.time() - t > 6:
                 if self.curr_command == 0:
                     bol = self.com_det.check_command()
                     if bol:

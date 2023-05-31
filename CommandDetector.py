@@ -42,34 +42,41 @@ class CommandDetector:
         self.curr1 = objects[random.randint(0, len(objects) - 1)]
         self.curr2 = objects[random.randint(0, len(objects) - 1)]
 
+        self.curr1_zone = self.detector.define_zone(self.ids, self.corners, np.where(self.ids == self.curr1)[0][0])
+        self.curr2_zone = self.detector.define_zone(self.ids, self.corners, np.where(self.ids == self.curr2)[0][0])
+
         count = 0
-        while self.curr1 == self.curr2:
+        while self.curr1_zone == self.curr2_zone:
             count += 1
             self.curr2 = self.curr2 + 1
             if self.curr2 == 20:
                 self.curr2 = 16
+            self.curr2_zone = self.detector.define_zone(self.ids, self.corners, np.where(self.ids == self.curr2)[0][0])
             if count > 10:
                 break
 
-        self.curr1_zone = self.detector.define_zone(self.ids, self.corners, np.where(self.ids == self.curr1)[0][0])
-        self.curr2_zone = self.detector.define_zone(self.ids, self.corners, np.where(self.ids == self.curr2)[0][0])
-
-        if ((self.curr1 == 16 and self.curr2 == 17) or (self.curr1 == 17 and self.curr2 == 16)) and self.audios[6][0] is not None:
+        if ((self.curr1 == 16 and self.curr2 == 17) or (self.curr1 == 17 and self.curr2 == 16)) and self.audios[6][
+            0] is not None:
             play_obj = self.audios[6][0].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 16 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 16)) and self.audios[6][1] is not None:
+        elif ((self.curr1 == 16 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 16)) and self.audios[6][
+            1] is not None:
             play_obj = self.audios[6][1].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 16 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 16)) and self.audios[6][2] is not None:
+        elif ((self.curr1 == 16 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 16)) and self.audios[6][
+            2] is not None:
             play_obj = self.audios[6][2].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 17 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 17)) and self.audios[6][3] is not None:
+        elif ((self.curr1 == 17 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 17)) and self.audios[6][
+            3] is not None:
             play_obj = self.audios[6][3].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 17 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 17)) and self.audios[6][4] is not None:
+        elif ((self.curr1 == 17 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 17)) and self.audios[6][
+            4] is not None:
             play_obj = self.audios[6][4].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 18 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 18)) and self.audios[6][5] is not None:
+        elif ((self.curr1 == 18 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 18)) and self.audios[6][
+            5] is not None:
             play_obj = self.audios[6][5].play()
             play_obj.wait_done()
         else:
@@ -79,22 +86,28 @@ class CommandDetector:
         return True
 
     def repeat_replace(self):
-        if ((self.curr1 == 16 and self.curr2 == 17) or (self.curr1 == 17 and self.curr2 == 16)) and self.audios[6][0] is not None:
+        if ((self.curr1 == 16 and self.curr2 == 17) or (self.curr1 == 17 and self.curr2 == 16)) and self.audios[6][
+            0] is not None:
             play_obj = self.audios[6][0].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 16 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 16)) and self.audios[6][1] is not None:
+        elif ((self.curr1 == 16 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 16)) and self.audios[6][
+            1] is not None:
             play_obj = self.audios[6][1].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 16 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 16)) and self.audios[6][2] is not None:
+        elif ((self.curr1 == 16 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 16)) and self.audios[6][
+            2] is not None:
             play_obj = self.audios[6][2].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 17 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 17)) and self.audios[6][3] is not None:
+        elif ((self.curr1 == 17 and self.curr2 == 18) or (self.curr1 == 18 and self.curr2 == 17)) and self.audios[6][
+            3] is not None:
             play_obj = self.audios[6][3].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 17 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 17)) and self.audios[6][4] is not None:
+        elif ((self.curr1 == 17 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 17)) and self.audios[6][
+            4] is not None:
             play_obj = self.audios[6][4].play()
             play_obj.wait_done()
-        elif ((self.curr1 == 18 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 18)) and self.audios[6][5] is not None:
+        elif ((self.curr1 == 18 and self.curr2 == 19) or (self.curr1 == 19 and self.curr2 == 18)) and self.audios[6][
+            5] is not None:
             play_obj = self.audios[6][5].play()
             play_obj.wait_done()
         else:
@@ -107,7 +120,8 @@ class CommandDetector:
                                                                                                                np.where(
                                                                                                                    self.ids == self.curr1)[
                                                                                                                    0][
-                                                                                                                   0]) == self.curr2_zone and self.detector.define_zone(self.ids, self.corners, np.where(self.ids == self.curr2)[0][0]) == self.curr1_zone:
+                                                                                                                   0]) == self.curr2_zone and self.detector.define_zone(
+            self.ids, self.corners, np.where(self.ids == self.curr2)[0][0]) == self.curr1_zone:
             if self.audios[4] is not None:
                 play_obj = self.audios[4].play()
                 play_obj.wait_done()
