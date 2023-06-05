@@ -44,6 +44,7 @@ class App(QWidget):
         self.load_button1 = QPushButton('Загрузить аудио-файлы', self)
         self.output_file_btn = QPushButton('Укажите файл для \n результатов', self)
         self.end_btn = QPushButton('Закончить работу и \n показать результаты', self)
+        self.end_btn.clicked.connect(self.finish_clicked)
         self.end_btn.setGeometry(290, 620, 325, 80)
         self.load_button1.setGeometry(290, 710, 325, 80)
         self.output_file_btn.setGeometry(290, 800, 325, 80)
@@ -111,8 +112,13 @@ class App(QWidget):
         self.reader.stop()
 
     def start_clicked(self):
-        self.reader = ImageReader(self, self.process_img, 1)
+        self.reader = ImageReader(self, self.process_img, 0)
         self.reader.start()
+
+    def finish_clicked(self):
+        self.reader.stop()
+        points = self.reader.points
+        print(points)
 
     def process_img(self, img):
         rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

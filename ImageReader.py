@@ -3,11 +3,9 @@ import random
 
 import cv2
 from cv2 import aruco
-import numpy as np
 from threading import Thread
 
-from CommandDetector import CommandDetector
-from ColorDetector import ColorDetector
+from detector.CommandDetector import CommandDetector
 
 
 class ImageReader(Thread):
@@ -18,6 +16,7 @@ class ImageReader(Thread):
         self.video.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         self.com_det = CommandDetector(frame)
         self.curr_command = -1
+        self.points = 0
         self.running = False
 
     def start(self):
@@ -48,6 +47,7 @@ class ImageReader(Thread):
                 if self.curr_command == 0:
                     bol = self.com_det.check_command()
                     if bol:
+                        self.points += 1
                         self.curr_command = random.randint(0, 1)
                         if self.curr_command == 0:
                             self.com_det.generate_command()
@@ -58,6 +58,7 @@ class ImageReader(Thread):
                 elif self.curr_command == 1:
                     bol = self.com_det.check_replace()
                     if bol:
+                        self.points += 1
                         self.curr_command = random.randint(0, 1)
                         if self.curr_command == 0:
                             self.com_det.generate_command()

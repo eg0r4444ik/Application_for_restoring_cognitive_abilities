@@ -1,9 +1,8 @@
-import cv2
 import pyttsx3
 import random
 import numpy as np
 
-from ColorDetector import ColorDetector
+from detector.ColorDetector import ColorDetector
 
 
 class CommandDetector:
