@@ -1,12 +1,15 @@
 import sys
 import wave
 import simpleaudio as sa
+from datetime import datetime
+import matplotlib.pyplot as plt
+import numpy as np
 
 import cv2
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt, QRect
 
-from PyQt5.QtGui import QPixmap, QColor
+from PyQt5.QtGui import QPixmap, QColor, QPalette
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QApplication, QLineEdit, QPushButton, QFileDialog
 
 # from ImageProcessor import ImageProcessor
@@ -40,18 +43,21 @@ class App(QWidget):
         self.edit4.setFixedWidth(250)
         self.start_btn = QPushButton('Старт', self)
         self.start_btn.setFont(font2)
+        self.start_btn.setStyleSheet('background: rgb(0,200,0);')
         self.start_btn.clicked.connect(self.start_clicked)
         self.load_button1 = QPushButton('Загрузить аудио-файлы', self)
         self.output_file_btn = QPushButton('Укажите файл для \n результатов', self)
         self.end_btn = QPushButton('Закончить работу и \n показать результаты', self)
-        self.end_btn.clicked.connect(self.finish_clicked)
-        self.end_btn.setGeometry(290, 620, 325, 80)
-        self.load_button1.setGeometry(290, 710, 325, 80)
-        self.output_file_btn.setGeometry(290, 800, 325, 80)
+        self.end_btn.setGeometry(290, 610, 325, 80)
+        self.load_button1.setGeometry(290, 700, 325, 80)
+        self.output_file_btn.setGeometry(290, 790, 325, 80)
+        self.end_btn.setStyleSheet('background: rgb(252,123,30);')
+        self.load_button1.setStyleSheet('background: rgb(30,130,252);')
+        self.output_file_btn.setStyleSheet('background: rgb(252,230,30);')
         self.end_btn.setFont(font2)
         self.load_button1.setFont(font2)
         self.output_file_btn.setFont(font2)
-        self.end_btn.clicked.connect(self.end_pr)
+        self.end_btn.clicked.connect(self.finish_clicked)
         self.load_button1.clicked.connect(self.load_file1)
         self.output_file_btn.clicked.connect(self.output_file)
         label1 = QLabel('Название первого предмета:')
@@ -108,17 +114,38 @@ class App(QWidget):
         if self.filename:
             self.output_filename = self.filename
 
-    def end_pr(self):
-        self.reader.stop()
-
     def start_clicked(self):
-        self.reader = ImageReader(self, self.process_img, 0)
+        self.reader = ImageReader(self, self.process_img, 1)
         self.reader.start()
 
     def finish_clicked(self):
         self.reader.stop()
-        points = self.reader.points
-        print(points)
+        file = open(self.output_filename, 'a')
+        date = self.get_date()
+        file.write(str(int(self.reader.points * 100 / self.reader.total_attempts)) + " " + str(date) + "\n")
+        file.flush()
+        self.graphic()
+        file.close()
+
+    @staticmethod
+    def get_date():
+        current_datetime = str(datetime.now()).split(" ")[0].split("-")
+        curr = current_datetime[2] + "." + current_datetime[1] + "." + current_datetime[0][2::]
+        return curr
+
+    def graphic(self):
+        file = open(self.output_filename, 'r')
+        x = list()
+        y = list()
+        for line in file:
+            s = line.split(" ")
+            x.append(s[1])
+            y.append(int(s[0]))
+        file.close()
+        plt.plot(x, y, label='Текущий результат: ' + str(x[-1]) + '\n' + 'График прогресса:')
+        plt.xlabel('Дата измерения')
+        plt.ylabel('Процент удачно выполненных заданий')
+        plt.show()
 
     def process_img(self, img):
         rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

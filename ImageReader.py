@@ -17,6 +17,7 @@ class ImageReader(Thread):
         self.com_det = CommandDetector(frame)
         self.curr_command = -1
         self.points = 0
+        self.total_attempts = -1
         self.running = False
 
     def start(self):
@@ -44,6 +45,7 @@ class ImageReader(Thread):
 
             self.cb(result)
             if time.time() - t > 6:
+                self.total_attempts += 1
                 if self.curr_command == 0:
                     bol = self.com_det.check_command()
                     if bol:
