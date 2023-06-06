@@ -7,9 +7,9 @@ import numpy as np
 
 import cv2
 from PyQt5 import QtGui
-from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtCore import Qt
 
-from PyQt5.QtGui import QPixmap, QColor, QPalette
+from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QApplication, QLineEdit, QPushButton, QFileDialog
 
 # from ImageProcessor import ImageProcessor
@@ -20,9 +20,10 @@ class App(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Main Window")
+        self.setStyleSheet("background-color: rgb(255, 255, 204)")
         self.width = 640
         self.height = 900
-        self.audio = []
+        self.audio = [None]*24
         self.setFixedSize(self.width, self.height)
         # create the label that holds the image
         self.image_label = QLabel(self)
@@ -43,7 +44,6 @@ class App(QWidget):
         self.edit4.setFixedWidth(250)
         self.start_btn = QPushButton('Старт', self)
         self.start_btn.setFont(font2)
-        self.start_btn.setStyleSheet('background: rgb(0,200,0);')
         self.start_btn.clicked.connect(self.start_clicked)
         self.load_button1 = QPushButton('Загрузить аудио-файлы', self)
         self.output_file_btn = QPushButton('Укажите файл для \n результатов', self)
@@ -51,6 +51,7 @@ class App(QWidget):
         self.end_btn.setGeometry(290, 610, 325, 80)
         self.load_button1.setGeometry(290, 700, 325, 80)
         self.output_file_btn.setGeometry(290, 790, 325, 80)
+        self.start_btn.setStyleSheet('background-color: rgb(0,200,0);')
         self.end_btn.setStyleSheet('background: rgb(252,123,30);')
         self.load_button1.setStyleSheet('background: rgb(30,130,252);')
         self.output_file_btn.setStyleSheet('background: rgb(252,230,30);')
@@ -68,6 +69,10 @@ class App(QWidget):
         label2.setFont(font1)
         label3.setFont(font1)
         label4.setFont(font1)
+        label1.setFixedWidth(250)
+        label2.setFixedWidth(250)
+        label3.setFixedWidth(250)
+        label4.setFixedWidth(250)
         self.edit1.setFont(font1)
         self.edit2.setFont(font1)
         self.edit3.setFont(font1)
@@ -115,7 +120,7 @@ class App(QWidget):
             self.output_filename = self.filename
 
     def start_clicked(self):
-        self.reader = ImageReader(self, self.process_img, 1)
+        self.reader = ImageReader(self, self.process_img, 0)
         self.reader.start()
 
     def finish_clicked(self):
