@@ -16,6 +16,7 @@ class ImageReader(Thread):
         self.video.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         self.com_det = CommandDetector(frame)
         self.curr_command = -1
+        self.time_for_command = frame.time_for_command
         self.points = 0
         self.total_attempts = -1
         self.running = False
@@ -44,7 +45,7 @@ class ImageReader(Thread):
             self.com_det.update(ids, corners)
 
             self.cb(result)
-            if time.time() - t > 6:
+            if time.time() - t > self.time_for_command:
                 self.total_attempts += 1
                 if self.curr_command == 0:
                     bol = self.com_det.check_command()

@@ -24,6 +24,7 @@ class App(QWidget):
         self.width = 640
         self.height = 900
         self.audio = [None]*24
+        self.time_for_command = 10
         self.setFixedSize(self.width, self.height)
         # create the label that holds the image
         self.image_label = QLabel(self)
@@ -37,11 +38,13 @@ class App(QWidget):
         self.edit2 = QLineEdit()
         self.edit3 = QLineEdit()
         self.edit4 = QLineEdit()
+        self.edit_for_time = QLineEdit()
         self.output_filename = None
         self.edit1.setFixedWidth(250)
         self.edit2.setFixedWidth(250)
         self.edit3.setFixedWidth(250)
         self.edit4.setFixedWidth(250)
+        self.edit_for_time.setFixedWidth(250)
         self.start_btn = QPushButton('Старт', self)
         self.start_btn.setFont(font2)
         self.start_btn.clicked.connect(self.start_clicked)
@@ -65,18 +68,22 @@ class App(QWidget):
         label2 = QLabel('Название второго предмета:')
         label3 = QLabel('Название третьего предмета:')
         label4 = QLabel('Название четвертого предмета:')
+        label_for_time = QLabel('Время на выполнение команды:')
         label1.setFont(font1)
         label2.setFont(font1)
         label3.setFont(font1)
         label4.setFont(font1)
+        label_for_time.setFont(font1)
         label1.setFixedWidth(250)
         label2.setFixedWidth(250)
         label3.setFixedWidth(250)
         label4.setFixedWidth(250)
+        label_for_time.setFixedWidth(250)
         self.edit1.setFont(font1)
         self.edit2.setFont(font1)
         self.edit3.setFont(font1)
         self.edit4.setFont(font1)
+        self.edit_for_time.setFont(font1)
         vbox.addWidget(self.start_btn)
         vbox.addWidget(self.image_label)
         vbox.addWidget(label1)
@@ -87,6 +94,8 @@ class App(QWidget):
         vbox.addWidget(self.edit3)
         vbox.addWidget(label4)
         vbox.addWidget(self.edit4)
+        vbox.addWidget(label_for_time)
+        vbox.addWidget(self.edit_for_time)
         # set the vbox layout as the widgets layout
         self.setLayout(vbox)
         # create a grey pixmap
@@ -120,6 +129,7 @@ class App(QWidget):
             self.output_filename = self.filename
 
     def start_clicked(self):
+        self.time_for_command = int(self.edit_for_time.text())
         self.reader = ImageReader(self, self.process_img, 0)
         self.reader.start()
 
