@@ -157,9 +157,13 @@ class App(QWidget):
             x.append(s[1])
             y.append(int(s[0]))
         file.close()
-        plt.plot(x, y, label='Текущий результат: ' + str(x[-1]) + '\n' + 'График прогресса:')
+        plt.figure(figsize=(8, 6))
+        plt.text(2, 90, "Текущий результат: " + str(y[-1]) + "%" + "\n" + "График прогресса:")
+        plt.plot(x, y)
+        plt.axis([x[0], x[-1], 0, 100])
         plt.xlabel('Дата измерения')
         plt.ylabel('Процент удачно выполненных заданий')
+        plt.scatter(x, y, s=50, color='red')
         plt.show()
 
     def process_img(self, img):
