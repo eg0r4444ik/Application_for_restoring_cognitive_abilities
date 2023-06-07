@@ -1,4 +1,4 @@
-from ArucoCoordsDetector import ArucoCoordsDetector
+from detector.ArucoCoordsDetector import ArucoCoordsDetector
 import numpy as np
 
 
