@@ -23,7 +23,7 @@ class App(QWidget):
         self.setStyleSheet("background-color: rgb(255, 255, 204)")
         self.width = 640
         self.height = 900
-        self.audio = [None]*24
+        self.audio = []
         self.time_for_command = 10
         self.setFixedSize(self.width, self.height)
         # create the label that holds the image
@@ -118,6 +118,7 @@ class App(QWidget):
             for filename in self.filenames:
                 wave_obj = sa.WaveObject.from_wave_file(filename)
                 self.audio.append(wave_obj)
+        file_dialog.close()
 
     def output_file(self):
         file_dialog = QFileDialog()
@@ -127,9 +128,11 @@ class App(QWidget):
 
         if self.filename:
             self.output_filename = self.filename
+        file_dialog.close()
 
     def start_clicked(self):
-        self.time_for_command = int(self.edit_for_time.text())
+        if self.edit_for_time.text() != "":
+            self.time_for_command = int(self.edit_for_time.text())
         self.reader = ImageReader(self, self.process_img, 0)
         self.reader.start()
 

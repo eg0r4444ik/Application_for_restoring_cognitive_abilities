@@ -1,6 +1,7 @@
 import pyttsx3
 import random
 import numpy as np
+import pymorphy2
 
 from detector.ColorDetector import ColorDetector
 
@@ -9,6 +10,9 @@ class CommandDetector:
 
     def __init__(self, frame):
         self.frame = frame
+        if len(frame.audio) == 0:
+            frame.audio = [None]*24
+
         self.audios = {16: [frame.audio[0], frame.audio[1], frame.audio[2], frame.audio[3]],
                        17: [frame.audio[4], frame.audio[5], frame.audio[6], frame.audio[7]],
                        18: [frame.audio[8], frame.audio[9], frame.audio[10], frame.audio[11]],
@@ -20,7 +24,21 @@ class CommandDetector:
         self.corners = []
         self.detector = ColorDetector()
         self.colors = ["red", "blue", "yellow", "green"]
-        self.objs = {16: frame.edit1.text(), 17: frame.edit2.text(), 18: frame.edit3.text(), 19: frame.edit4.text()}
+        morph = pymorphy2.MorphAnalyzer()
+        word1 = morph.parse(frame.edit1.text())[0]
+        word2 = morph.parse(frame.edit2.text())[0]
+        word3 = morph.parse(frame.edit3.text())[0]
+        word4 = morph.parse(frame.edit4.text())[0]
+        self.objs = {16: "", 17: "",
+                     18: "", 19: ""}
+        if 'NOUN' in word1.tag:
+            self.objs[16] = word1.inflect({'accs'}).word
+        if 'NOUN' in word2.tag:
+            self.objs[17] = word2.inflect({'accs'}).word
+        if 'NOUN' in word3.tag:
+            self.objs[18] = word3.inflect({'accs'}).word
+        if 'NOUN' in word4.tag:
+            self.objs[19] = word4.inflect({'accs'}).word
         self.curr_zone = "red"
         self.curr_obj = 16
         self.curr1 = 16
