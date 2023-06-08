@@ -15,6 +15,8 @@ class ImageReader(Thread):
         self.video = cv2.VideoCapture(source_idx)
         if not self.video.isOpened():
             self.video = cv2.VideoCapture(0)
+            if not self.video.isOpened():
+                self.video = cv2.VideoCapture(1)
         self.video.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         self.com_det = CommandDetector(frame)
         self.curr_command = -1
