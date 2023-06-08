@@ -51,19 +51,24 @@ class App(QWidget):
         self.load_button1 = QPushButton('Загрузить аудио-файлы', self)
         self.output_file_btn = QPushButton('Укажите файл для \n результатов', self)
         self.end_btn = QPushButton('Закончить работу и \n показать результаты', self)
-        self.end_btn.setGeometry(290, 610, 325, 80)
-        self.load_button1.setGeometry(290, 700, 325, 80)
-        self.output_file_btn.setGeometry(290, 790, 325, 80)
+        self.change_camera = QPushButton('Поменять камеру', self)
+        self.end_btn.setGeometry(290, 580, 325, 80)
+        self.load_button1.setGeometry(290, 660, 325, 80)
+        self.output_file_btn.setGeometry(290, 740, 325, 80)
+        self.change_camera.setGeometry(290, 820, 325, 80)
         self.start_btn.setStyleSheet('background-color: rgb(0,200,0);')
         self.end_btn.setStyleSheet('background: rgb(252,123,30);')
         self.load_button1.setStyleSheet('background: rgb(30,130,252);')
         self.output_file_btn.setStyleSheet('background: rgb(252,230,30);')
+        self.change_camera.setStyleSheet('background: rgb(247, 77, 77);')
         self.end_btn.setFont(font2)
         self.load_button1.setFont(font2)
         self.output_file_btn.setFont(font2)
+        self.change_camera.setFont(font2)
         self.end_btn.clicked.connect(self.finish_clicked)
         self.load_button1.clicked.connect(self.load_file1)
         self.output_file_btn.clicked.connect(self.output_file)
+        self.change_camera.clicked.connect(self.change_camera_param)
         label1 = QLabel('Название первого предмета:')
         label2 = QLabel('Название второго предмета:')
         label3 = QLabel('Название третьего предмета:')
@@ -104,6 +109,7 @@ class App(QWidget):
         # set the image image to the grey pixmap
         self.image_label.setPixmap(grey)
         self.reader = None
+        self.camera_param = 1
 
         # self.processor = ImageProcessor()
         # self.reader = ImageReader(self, self.process_img, 0)
@@ -120,6 +126,12 @@ class App(QWidget):
                 self.audio.append(wave_obj)
         file_dialog.close()
 
+    def change_camera_param(self):
+        if self.camera_param == 1:
+            self.camera_param = 0
+        else:
+            self.camera_param = 1
+
     def output_file(self):
         file_dialog = QFileDialog()
         file_dialog.setFileMode(QFileDialog.ExistingFiles)
@@ -133,7 +145,7 @@ class App(QWidget):
     def start_clicked(self):
         if self.edit_for_time.text() != "":
             self.time_for_command = int(self.edit_for_time.text())
-        self.reader = ImageReader(self, self.process_img, 1)
+        self.reader = ImageReader(self, self.process_img, self.camera_param)
         self.reader.start()
 
     def finish_clicked(self):
