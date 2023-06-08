@@ -133,7 +133,7 @@ class App(QWidget):
     def start_clicked(self):
         if self.edit_for_time.text() != "":
             self.time_for_command = int(self.edit_for_time.text())
-        self.reader = ImageReader(self, self.process_img, 0)
+        self.reader = ImageReader(self, self.process_img, 1)
         self.reader.start()
 
     def finish_clicked(self):
